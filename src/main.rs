@@ -1,10 +1,18 @@
 mod automata_field;
 use automata_field::AutomataField;
 
+use std::{thread, time};
+
 fn main() {
     let (width, height) = graphics::size_available();
-    let automata_field = AutomataField::new(width, height);
-    graphics::display(automata_field);
+    let mut automata_field = AutomataField::new(width, height * 2);
+    automata_field.generate();
+
+    loop {
+        graphics::display(&automata_field);
+        thread::sleep(time::Duration::from_millis(500));
+        automata_field.tick();
+    }
 }
 
 mod graphics {
@@ -16,7 +24,7 @@ mod graphics {
     use self::terminal_graphics::{Colour, Display};
     use self::terminal_size::{terminal_size, Height, Width};
 
-    pub fn display(automata_field: AutomataField) {
+    pub fn display(automata_field: &AutomataField) {
         let (width, height) = size_available();
         let mut screen = Display::new(width, height);
         screen.clear();
@@ -47,7 +55,10 @@ mod graphics {
     fn color_of(automata: Automata) -> Colour {
         use self::Automata::*;
         match automata {
-            Redstone(power) => Colour::from_rgb(power * 64 - 64, 0, 0),
+            Redstone(power) => Colour::from_rgb(power * 16, 0, 0),
+            RedstoneBlock() => Colour::from_rgb(255, 0, 0),
+            GameOfLife(true) => Colour::from_rgb(0, 255, 0),
+            GameOfLife(true) => Colour::from_rgb(200, 100, 0),
             _ => Colour::from_rgb(0x66, 0x66, 0x66),
         }
     }

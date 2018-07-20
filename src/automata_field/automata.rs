@@ -1,6 +1,8 @@
 #[derive(Copy, Clone)]
 pub enum Automata {
     Redstone(u8),
+    RedstoneBlock(),
+    GameOfLife(bool),
     Air(),
 }
 
@@ -8,6 +10,7 @@ impl Automata {
     fn redstone_power(&self) -> u8 {
         match *self {
             Redstone(power) => power,
+            RedstoneBlock() => 16,
             _ => 0,
         }
     }
@@ -41,9 +44,21 @@ pub fn next_middle(surroundings: Surroundings) -> Automata {
                 .iter()
                 .map(Automata::redstone_power)
                 .fold(0, u8::max)
-                .max(power)
-                .min(1) - 1,
+                .max(1) - 1,
         ),
+        Surroundings {
+            middle: GameOfLife(false),
+            topmiddle,
+            left,
+            right,
+            bottommiddle,
+            ..
+        } => GameOfLife({
+            [topmiddle, left, right, bottommiddle]
+                .iter()
+                .map(Automata::redstone_power)
+                .fold(0, u8::max) > 0
+        }),
         Surroundings { middle, .. } => middle,
     }
 }

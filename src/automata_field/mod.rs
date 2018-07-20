@@ -1,3 +1,5 @@
+extern crate rand;
+
 pub mod automata;
 
 use self::automata::{next_middle, Automata, Surroundings};
@@ -16,11 +18,34 @@ pub struct AutomataField {
 
 impl AutomataField {
     pub fn new(width: u32, height: u32) -> AutomataField {
+        let field: Vec<Automata> = (0..width * height).map(|_| Automata::Redstone(0)).collect();
         AutomataField {
             width,
             height,
-            field: (0..width * height).map(|_| Automata::Air()).collect(),
+            field,
             field_alternate: (0..width * height).map(|_| Automata::Air()).collect(),
+        }
+    }
+
+    pub fn generate(&mut self) {
+        let (width, height) = (self.width, self.height);
+        self.spread(Automata::RedstoneBlock(), 4);
+        self.spread(Automata::GameOfLife(false), 16);
+    }
+
+    fn spread(&mut self, automata: Automata, count: u32) {
+        for _ in 0 .. count {
+            let x = rand::random::<u32>() % self.width;
+            let y = rand::random::<u32>() % self.height;
+            self.place(automata, x, y);
+        }
+    }
+
+    fn place(&mut self, automata: Automata, x: u32, y: u32) {
+        if 0 <= x && x < self.width && 0 <= y && y < self.height {
+            self.field[(y as u32 * self.width + x as u32) as usize] = automata;
+        } else {
+            panic!();
         }
     }
 
@@ -47,7 +72,7 @@ impl AutomataField {
         }
     }
 
-    fn tick(&mut self) {
+    pub fn tick(&mut self) {
         for x in 0..self.width {
             for y in 0..self.height {
                 self.field_alternate[y as usize * self.width as usize + x as usize] =

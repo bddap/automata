@@ -1,0 +1,8 @@
+[package]
+name = "automata"
+version = "0.1.0"
+authors = ["Andrew Dirksen <andrew@dirksen.com>"]
+
+[dependencies]
+terminal_graphics = "0.1.5"
+terminal_size = "0.1.7"

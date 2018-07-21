@@ -33,7 +33,7 @@ pub struct Surroundings {
 pub fn next_middle(surroundings: Surroundings) -> Automata {
     match surroundings {
         Surroundings {
-            middle: Redstone(power),
+            middle: Redstone(_),
             topmiddle,
             left,
             right,

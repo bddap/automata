@@ -39,7 +39,7 @@ fn color_of(automata: Automata) -> Colour {
     match automata {
         Redstone(power) => Colour::from_rgb(power * 16, 0, 0),
         RedstoneBlock() => Colour::from_rgb(255, 0, 0),
-        GameOfLife(true) => Colour::from_rgb(0, 255, 0),
+        GameOfLife(false) => Colour::from_rgb(0, 255, 0),
         GameOfLife(true) => Colour::from_rgb(200, 100, 0),
         _ => Colour::from_rgb(0x66, 0x66, 0x66),
     }

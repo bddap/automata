@@ -2,10 +2,7 @@ extern crate rand;
 
 use automata::{next_middle, Automata, Surroundings};
 use std::mem;
-use std::slice::Iter;
 use std::vec::Vec;
-
-use std::iter::Enumerate;
 
 pub struct AutomataField {
     width: u32,
@@ -26,7 +23,6 @@ impl AutomataField {
     }
 
     pub fn generate(&mut self) {
-        let (width, height) = (self.width, self.height);
         self.spread(Automata::RedstoneBlock(), 4);
         self.spread(Automata::GameOfLife(false), 16);
     }
@@ -40,11 +36,8 @@ impl AutomataField {
     }
 
     fn place(&mut self, automata: Automata, x: u32, y: u32) {
-        if 0 <= x && x < self.width && 0 <= y && y < self.height {
-            self.field[(y as u32 * self.width + x as u32) as usize] = automata;
-        } else {
-            panic!();
-        }
+        assert!(x < self.width && y < self.height);
+        self.field[(y as u32 * self.width + x as u32) as usize] = automata;
     }
 
     pub fn automata_at(&self, x: i32, y: i32) -> Automata {

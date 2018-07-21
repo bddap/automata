@@ -29,8 +29,8 @@ impl AutomataField {
 
     pub fn generate(&mut self) {
         let (width, height) = (self.width, self.height);
-        self.spread(Automata::RedstoneBlock(), 4);
-        self.spread(Automata::GameOfLife(false), 16);
+        self.spread(Automata::RedstoneBlock(), 1);
+        self.spread(Automata::GameOfLife(false), 300);
     }
 
     fn spread(&mut self, automata: Automata, count: u32) {

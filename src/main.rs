@@ -10,7 +10,7 @@ fn main() {
 
     loop {
         graphics::display(&automata_field);
-        thread::sleep(time::Duration::from_millis(500));
+        thread::sleep(time::Duration::from_millis(50));
         automata_field.tick();
     }
 }

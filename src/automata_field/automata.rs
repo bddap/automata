@@ -1,3 +1,5 @@
+extern crate rand;
+
 #[derive(Copy, Clone)]
 pub enum Automata {
     Redstone(u8),
@@ -40,11 +42,11 @@ pub fn next_middle(surroundings: Surroundings) -> Automata {
             bottommiddle,
             ..
         } => Redstone(
-            [topmiddle, left, right, bottommiddle]
+            ([topmiddle, left, right, bottommiddle]
                 .iter()
                 .map(Automata::redstone_power)
-                .fold(0, u8::max)
-                .max(1) - 1,
+                .fold(0, u8::max) + rand::random::<u8>() % 4)
+                .max(4) - 4,
         ),
         Surroundings {
             middle: GameOfLife(false),
@@ -59,6 +61,14 @@ pub fn next_middle(surroundings: Surroundings) -> Automata {
                 .map(Automata::redstone_power)
                 .fold(0, u8::max) > 0
         }),
+        Surroundings {
+            middle: GameOfLife(true),
+            topmiddle,
+            left,
+            right,
+            bottommiddle,
+            ..
+        } => RedstoneBlock(),
         Surroundings { middle, .. } => middle,
     }
 }

@@ -1,8 +1,6 @@
 extern crate rand;
 
-pub mod automata;
-
-use self::automata::{next_middle, Automata, Surroundings};
+use automata::{next_middle, Automata, Surroundings};
 use std::mem;
 use std::slice::Iter;
 use std::vec::Vec;
@@ -34,7 +32,7 @@ impl AutomataField {
     }
 
     fn spread(&mut self, automata: Automata, count: u32) {
-        for _ in 0 .. count {
+        for _ in 0..count {
             let x = rand::random::<u32>() % self.width;
             let y = rand::random::<u32>() % self.height;
             self.place(automata, x, y);

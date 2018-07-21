@@ -10,21 +10,17 @@ pub fn display(automata_field: &AutomataField) {
     let (width, height) = size_available();
     let mut screen = Display::new(width, height);
     screen.clear();
-
-    for x in 0..width {
-        for y in 0..(height * 2) {
-            let automata = automata_field.automata_at(x as i32, y as i32);
-            let colour = color_of(automata);
+    let chunks = automata_field.iter();
+    for (y, row) in chunks.enumerate() {
+        for (x, automata) in row.iter().enumerate() {
+            let colour = color_of(*automata);
+            let (x, y) = (x as isize, y as isize);
             match y % 2 {
-                0 => screen.set_pixel(x as isize, y as isize / 2, '▄', colour, colour),
-                1 => screen
-                    .get_mut_pixel(x as isize, (y as isize - 1) / 2)
-                    .set_colour(colour),
-                _ => println!("That shouldn't happen"),
+                0 => screen.set_pixel(x, y / 2, '▄', colour, colour),
+                _ => screen.get_mut_pixel(x, (y - 1) / 2).set_colour(colour),
             }
         }
     }
-
     screen.print();
 }
 

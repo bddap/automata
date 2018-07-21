@@ -2,6 +2,7 @@ extern crate rand;
 
 use automata::{next_middle, Automata, Surroundings};
 use std::mem;
+use std::slice::Chunks;
 use std::vec::Vec;
 
 pub struct AutomataField {
@@ -40,7 +41,7 @@ impl AutomataField {
         self.field[(y as u32 * self.width + x as u32) as usize] = automata;
     }
 
-    pub fn automata_at(&self, x: i32, y: i32) -> Automata {
+    fn automata_at(&self, x: i32, y: i32) -> Automata {
         if 0 <= x && x < self.width as i32 && 0 <= y && y < self.height as i32 {
             self.field[(y as u32 * self.width + x as u32) as usize]
         } else {
@@ -72,4 +73,39 @@ impl AutomataField {
         }
         mem::swap(&mut self.field, &mut self.field_alternate);
     }
+
+    pub fn iter(&self) -> Chunks<Automata> {
+        self.field.chunks(self.width as usize)
+    }
 }
+
+// struct AutomataFieldIterator {
+//     progress: usize,
+//     width: usize,
+//     height: usize,
+//     content: Vec<Automata>,
+// }
+
+// impl Iterator for AutomataFieldIterator {
+//     type Item = (usize, usize, Automata);
+
+//     fn next(&mut self) -> Option<Self::Item> {
+//         if self.progress < self.height * self.width {
+//             let (x, y, p) = (
+//                 self.progress % self.width,
+//                 self.progress / self.width,
+//                 self.progress,
+//             );
+//             assert!(x + y * self.width == p);
+//             self.progress = self.progress + 1;
+//             Some((x, y, self.content[p]))
+//         } else {
+//             None
+//         }
+//     }
+// }
+
+// struct AutomataFieldIterator {
+//     content: Chunks<Automata>,
+//     currentslice: Slice<Automata>,
+// }

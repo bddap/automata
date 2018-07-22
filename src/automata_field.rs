@@ -6,20 +6,21 @@ use std::slice::Chunks;
 use std::vec::Vec;
 
 pub struct AutomataField {
-    width: u32,
-    height: u32,
-    pub field: Vec<Automata>,
+    width: usize,
+    height: usize,
+    field: Vec<Automata>,
     field_alternate: Vec<Automata>,
 }
 
 impl AutomataField {
-    pub fn new(width: u32, height: u32) -> AutomataField {
-        let field: Vec<Automata> = (0..width * height).map(|_| Automata::Redstone(0)).collect();
+    pub fn new(width: usize, height: usize) -> AutomataField {
+        let count = width * height;
+        let field: Vec<Automata> = (0..count).map(|_| Automata::Redstone(0)).collect();
         AutomataField {
             width,
             height,
             field,
-            field_alternate: (0..width * height).map(|_| Automata::Air()).collect(),
+            field_alternate: (0..count).map(|_| Automata::Air()).collect(),
         }
     }
 
@@ -30,27 +31,27 @@ impl AutomataField {
 
     fn spread(&mut self, automata: Automata, count: u32) {
         for _ in 0..count {
-            let x = rand::random::<u32>() % self.width;
-            let y = rand::random::<u32>() % self.height;
+            let x = rand::random::<usize>() % self.width;
+            let y = rand::random::<usize>() % self.height;
             self.place(automata, x, y);
         }
     }
 
-    fn place(&mut self, automata: Automata, x: u32, y: u32) {
+    fn place(&mut self, automata: Automata, x: usize, y: usize) {
         assert!(x < self.width && y < self.height);
-        self.field[(y as u32 * self.width + x as u32) as usize] = automata;
+        self.field[y * self.width + x] = automata;
     }
 
-    fn automata_at(&self, x: i32, y: i32) -> Automata {
-        if 0 <= x && x < self.width as i32 && 0 <= y && y < self.height as i32 {
-            self.field[(y as u32 * self.width + x as u32) as usize]
+    fn automata_at(&self, x: isize, y: isize) -> Automata {
+        if 0 <= x && (x as usize) < self.width && 0 <= y && (y as usize) < self.height {
+            self.field[y as usize * self.width + x as usize]
         } else {
             Automata::Air()
         }
     }
 
-    fn surroundings_for(&self, x: u32, y: u32) -> Surroundings {
-        let (x, y) = (x as i32, y as i32);
+    fn surroundings_for(&self, x: usize, y: usize) -> Surroundings {
+        let (x, y) = (x as isize, y as isize);
         Surroundings {
             topleft: self.automata_at(x - 1, y - 1),
             topmiddle: self.automata_at(x, y - 1),
@@ -75,37 +76,6 @@ impl AutomataField {
     }
 
     pub fn iter(&self) -> Chunks<Automata> {
-        self.field.chunks(self.width as usize)
+        self.field.chunks(self.width)
     }
 }
-
-// struct AutomataFieldIterator {
-//     progress: usize,
-//     width: usize,
-//     height: usize,
-//     content: Vec<Automata>,
-// }
-
-// impl Iterator for AutomataFieldIterator {
-//     type Item = (usize, usize, Automata);
-
-//     fn next(&mut self) -> Option<Self::Item> {
-//         if self.progress < self.height * self.width {
-//             let (x, y, p) = (
-//                 self.progress % self.width,
-//                 self.progress / self.width,
-//                 self.progress,
-//             );
-//             assert!(x + y * self.width == p);
-//             self.progress = self.progress + 1;
-//             Some((x, y, self.content[p]))
-//         } else {
-//             None
-//         }
-//     }
-// }
-
-// struct AutomataFieldIterator {
-//     content: Chunks<Automata>,
-//     currentslice: Slice<Automata>,
-// }

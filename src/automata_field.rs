@@ -1,6 +1,4 @@
-extern crate rand;
-
-use automata::{next_middle, Automata, Surroundings};
+use automata::{next_middle, Automata, Surroundings, Direction};
 use std::mem;
 use std::slice::Chunks;
 use std::vec::Vec;
@@ -11,6 +9,9 @@ pub struct AutomataField {
     field: Vec<Automata>,
     field_alternate: Vec<Automata>,
 }
+
+use self::Automata::*;
+use self::Direction::*;
 
 impl AutomataField {
     pub fn new(width: usize, height: usize) -> AutomataField {
@@ -25,16 +26,22 @@ impl AutomataField {
     }
 
     pub fn generate(&mut self) {
-        self.spread(Automata::RedstoneBlock(), 4);
-        self.spread(Automata::GameOfLife(false), 16);
-    }
-
-    fn spread(&mut self, automata: Automata, count: u32) {
-        for _ in 0..count {
-            let x = rand::random::<usize>() % self.width;
-            let y = rand::random::<usize>() % self.height;
-            self.place(automata, x, y);
+        let h = self.height / 2;
+        for x in 0..self.width / 8 {
+            self.place(RedstoneBlock(), x * 8, h);
         }
+ 
+        let h = self.height / 16 * 7;
+        let w = self.width / 2;
+        self.place(Water(15), w, h);
+
+        let w = self.width / 64 * 17;
+        for y in (self.height / 16 * 7)..(self.height / 16 * 9) {
+            self.place(Air(), w, y);
+        }
+
+        let h = self.height / 2;
+        self.place(Slug(Right), 0, h);
     }
 
     fn place(&mut self, automata: Automata, x: usize, y: usize) {

@@ -54,11 +54,21 @@ pub fn size_available() -> (usize, usize) {
 
 fn color_of(automata: Automata) -> Colour {
     use self::Automata::*;
+    use self::Colour::*;
     match automata {
-        Redstone(power) => Colour::from_rgb(power * 16, 0, 0),
-        RedstoneBlock() => Colour::from_rgb(255, 0, 0),
-        GameOfLife(false) => Colour::from_rgb(0, 255, 0),
-        GameOfLife(true) => Colour::from_rgb(200, 100, 0),
-        _ => Colour::from_rgb(0x66, 0x66, 0x66),
+        Redstone(power) => if power == 0 {
+            BrightBlack
+        } else if power < 9 {
+            Red
+        } else {
+            BrightRed
+        },
+        RedstoneBlock() => BrightWhite,
+        GameOfLife(false) => BrightGreen,
+        GameOfLife(true) => Green,
+        Water(_) => Blue,
+        Air() => White,
+        Slug(_) => BrightYellow,
+        Slime() => Yellow,
     }
 }

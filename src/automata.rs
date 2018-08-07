@@ -1,4 +1,4 @@
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub enum Automata {
     Redstone(u8),
     Water(u8),
@@ -9,7 +9,7 @@ pub enum Automata {
     Slime(),
 }
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Direction {
     Up,
     Left,
@@ -17,29 +17,9 @@ pub enum Direction {
     Down,
 }
 
-impl Direction {
-    fn opposite(&self, other: Self) -> bool {
-        match (self, other) {
-            (Up, Down) => true,
-            (Left, Right) => true,
-            (Down, Up) => true,
-            (Right, Left) => true,
-            _ => false,
-        }
-    }
-}
-
 use self::Direction::*;
 
 impl Automata {
-    fn power_output(&self) -> u8 {
-        match *self {
-            Redstone(power) => power,
-            RedstoneBlock() => 16,
-            _ => 0,
-        }
-    }
-
     fn is_succeptible_to_liquid(&self) -> bool {
         match *self {
             Redstone(_) => true,
@@ -50,19 +30,76 @@ impl Automata {
         }
     }
 
-    fn inflict(&self, other: Self, direction: Direction) -> Option<Self> {
-        match &self {
-            Water(wetness) => if *wetness != 0 && other.is_succeptible_to_liquid() {
-                Some(Water((*wetness).max(1) - 1))
-            } else {
+    fn wet(&self, wetness: u8) -> Option<Self> {
+        // return what self becomes when it gets wet
+        // None if the water has no effect
+        assert!(wetness != 0);
+        let wetness_here = wetness.max(1) - 1;
+        let maybe = Some(Water(wetness_here));
+        match *self {
+            Redstone(_) => maybe,
+            RedstoneBlock() => maybe,
+            Air() => maybe,
+            Water(wet) => if wet >= wetness {
                 None
-            },
-            Slug(slug_direction) => if *slug_direction == direction {
-                Some(Slug(*slug_direction))
             } else {
-                None
+                Some(Water(wetness_here.max(1) - 1))
             },
             _ => None,
+        }
+    }
+
+    fn powered(&self, pow: u8) -> Option<Self> {
+        // return what self becomes when it is powered
+        // None if power has no effect
+        match *self {
+            Redstone(spow) => if spow >= pow {
+                None
+            } else {
+                Some(Redstone(pow.max(1) - 1))
+            },
+            GameOfLife(false) => Some(GameOfLife(true)),
+            _ => None,
+        }
+    }
+
+    fn inflict(&self, other: Self, direction: Direction) -> Option<Self> {
+        match *self {
+            Water(0) => None,
+            Water(wetness) => other.wet(wetness),
+            Slug(slug_direction) => if slug_direction == direction {
+                Some(Slug(slug_direction))
+            } else {
+                None
+            },
+            Redstone(0) => None,
+            Redstone(powa) => other.powered(powa),
+            RedstoneBlock() => other.powered(16),
+            _ => None,
+        }
+    }
+
+    fn resolve_infliction(&self, other: Self) -> Self {
+        match (*self, other) {
+            (Slug(_), Slug(_)) => Slime(),
+            (Slug(direction), _) => Slug(direction),
+            (_, Slug(direction)) => Slug(direction),
+            (Water(weta), Water(wetb)) => Water(weta.max(wetb)),
+            (Water(wet), a) => if a.is_succeptible_to_liquid() {
+                Water(wet)
+            } else {
+                a
+            },
+            (a, Water(wet)) => if a.is_succeptible_to_liquid() {
+                Water(wet)
+            } else {
+                a
+            },
+            (Redstone(powa), Redstone(powb)) => Redstone(powa.max(powb)),
+            a => {
+                println!("{:?}", a);
+                unreachable!();
+            }
         }
     }
 }
@@ -82,22 +119,18 @@ pub struct Surroundings {
 }
 
 impl Surroundings {
-    fn power_input(&self) -> u8 {
-        self.topmiddle
-            .power_output()
-            .max(self.left.power_output())
-            .max(self.right.power_output())
-            .max(self.bottommiddle.power_output())
-            .max(1) - 1
-    }
-
     fn infliction_requested(&self) -> Option<Automata> {
         let middle = self.middle;
-        self.topmiddle
-            .inflict(middle, Down)
-            .or(self.left.inflict(middle, Right))
-            .or(self.right.inflict(middle, Left))
-            .or(self.bottommiddle.inflict(middle, Up))
+        [
+            self.topmiddle.inflict(middle, Down),
+            self.left.inflict(middle, Right),
+            self.right.inflict(middle, Left),
+            self.bottommiddle.inflict(middle, Up),
+        ].iter()
+            .fold(None, |a, &b| match (a, b) {
+                (Some(l), Some(r)) => Some(l.resolve_infliction(r)),
+                _ => a.or(b),
+            })
     }
 }
 
@@ -107,14 +140,9 @@ pub fn next_middle(surroundings: Surroundings) -> Automata {
     }
 
     match surroundings.middle {
-        Redstone(_) => Redstone(surroundings.power_input()),
-        GameOfLife(false) => if surroundings.power_input() > 0 {
-            GameOfLife(true)
-        } else {
-            GameOfLife(false)
-        },
         Water(0) => Air(),
-        Water(wetness) => Water(wetness - 1),
+        Water(wetness) => Water(wetness.max(1) - 1),
+        Redstone(pow) => Redstone(pow.max(1) - 1),
         Slug(_) => Slime(),
         a => a,
     }

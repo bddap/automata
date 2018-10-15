@@ -1,5 +1,0 @@
-[book]
-authors = ["Andrew Dirksen"]
-multilingual = false
-src = "src"
-title = "Using Game Programming Patterns"

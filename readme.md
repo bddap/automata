@@ -11,7 +11,7 @@ This report:
 
 Automata, the program, is inspired by Conway's Game of Life. Both feature a 2d grid, on which Finite States are displayed as square cells. Each frame, cells on the grid are updated according a Finite State Machine. This application of FSM's is often referred to as Cellular Automaton. Automata, the program, gets it's name from Cellular Automata.
 
-Automata differs from Conway's Game of Life. While cells in Conway's Game of Life may occupy one of two states. Automata's cells may occupy one of 521 states. In the section on [State](#State), we'll explore application of the State pattern in the program.
+Automata differs from Conway's Game of Life. While cells in Conway's Game of Life may occupy one of two states. Automata's cells may occupy one of 521 states. In the section on [State](#state), we'll explore application of the State pattern in the program.
 
 Automata program in action:
 
@@ -36,11 +36,11 @@ The Automata program is written in the rust programming language.
 
 Source code for the automata program may be found here: [https://github.com/bddap/automata](https://github.com/bddap/automata)
 
-The program is separated into four files/modules. [Main](#Main), [Automata](#Automata), [Automata Field](#Automata-Field), and [Graphics](#Graphics).
+The program is separated into four files/modules. [Main](#main), [Automata](#automata), [Automata Field](#automata-field), and [Graphics](#graphics).
 
 # Main
 
-Initializes an Automata Field and graphics. Runs a [Game Loop](#Game-Loop) to [Update](#Update-Method) Automata [States](#State) and refresh graphics at a regular interval.
+Initializes an Automata Field and graphics. Runs a [Game Loop](#game-loop) to [Update](#update-method) Automata [States](#state) and refresh graphics at a regular interval.
 
 # Automata
 
@@ -85,21 +85,21 @@ Rust enums allow for associated data. `Redstone`, `Water`, `GameOfLife`, and `Sl
 
 # Automata Field
 
-Automata Field represents a two dimensional grid of Automata. A [double buffer](#Double-Buffer) is used to prevent race conditions between cells.
+Automata Field represents a two dimensional grid of Automata. A [double buffer](#double-buffer) is used to prevent race conditions between cells.
 
 # Graphics
 
-Graphics prints colored squares to the terminal as part of the [Game Loop](#Game-Loop). Terminal graphics are employed to simplify development (no windowing libraries necessary).
+Graphics prints colored squares to the terminal as part of the [Game Loop](#game-loop). Terminal graphics are employed to simplify development (no windowing libraries necessary).
 
 # Patterns
 
 Five patterns from "Game Programming Patterns" were employed when writing the Automata program.
 
-- [State](#State)
-- [Double Buffer](#Double-Buffer)
-- [Game Loop](#Game-Loop)
-- [Data Locality](#Data-Locality)
-- [Update Method](Update-Method)
+- [State](#state)
+- [Double Buffer](#double-Buffer)
+- [Game Loop](#game-loop)
+- [Data Locality](#data-locality)
+- [Update Method](#update-method)
 
 # State
 

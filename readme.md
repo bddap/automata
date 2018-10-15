@@ -15,13 +15,12 @@ Automata differs from Conway's Game of Life. While cells in Conway's Game of Lif
 
 Automata program in action:
 
-<script src='https://asciinema.org/a/xlJ1V1STsW7k3VMDQwX0zj10C.js' id='asciicast-xlJ1V1STsW7k3VMDQwX0zj10C' async data-size="medium" data-theme="tango"></script>
+[https://asciinema.org/a/xlJ1V1STsW7k3VMDQwX0zj10C](https://asciinema.org/a/xlJ1V1STsW7k3VMDQwX0zj10C)
 
 Legend:
 
-|             |                        |
-| -:          | :-                     |
 | **Color**   | **Atomata State Name** |
+| -:          | :-                     |
 | Blue        | Water                  |
 | Light Gray  | Air                    |
 | White       | RedstoneBlock          |
@@ -37,7 +36,7 @@ The Automata program is written in the rust programming language.
 
 Source code for the automata program may be found here: [https://github.com/bddap/automata](https://github.com/bddap/automata)
 
-The program is separated into four files/modules. [Main](./Main.html), [Automata](./Automata.html), [Automata Field](./Automata-Field.html), and [Graphics](./Graphics.html).
+The program is separated into four files/modules. [Main](#Main), [Automata](#Automata), [Automata Field](#Automata-Field), and [Graphics](#Graphics).
 
 # Main
 

@@ -11,7 +11,7 @@ This report:
 
 Automata, the program, is inspired by Conway's Game of Life. Both feature a 2d grid, on which Finite States are displayed as square cells. Each frame, cells on the grid are updated according a Finite State Machine. This application of FSM's is often referred to as Cellular Automaton. Automata, the program, gets it's name from Cellular Automata.
 
-Automata differs from Conway's Game of Life. While cells in Conway's Game of Life may occupy one of two states. Automata's cells may occupy one of 521 states. In the section on [State](./State.html), we'll explore application of the State pattern in the program.
+Automata differs from Conway's Game of Life. While cells in Conway's Game of Life may occupy one of two states. Automata's cells may occupy one of 521 states. In the section on [State](#State), we'll explore application of the State pattern in the program.
 
 Automata program in action:
 
@@ -40,7 +40,7 @@ The program is separated into four files/modules. [Main](#Main), [Automata](#Aut
 
 # Main
 
-Initializes an Automata Field and graphics. Runs a [Game Loop](./Game-Loop.html) to [Update](./Update-Method.html) Automata [States](./State.html) and refresh graphics at a regular interval.
+Initializes an Automata Field and graphics. Runs a [Game Loop](#Game-Loop) to [Update](#Update-Method) Automata [States](#State) and refresh graphics at a regular interval.
 
 # Automata
 
@@ -85,21 +85,21 @@ Rust enums allow for associated data. `Redstone`, `Water`, `GameOfLife`, and `Sl
 
 # Automata Field
 
-Automata Field represents a two dimensional grid of Automata. A [double buffer](./Double-Buffer.html) is used to prevent race conditions between cells.
+Automata Field represents a two dimensional grid of Automata. A [double buffer](#Double-Buffer) is used to prevent race conditions between cells.
 
 # Graphics
 
-Graphics prints colored squares to the terminal as part of the [Game Loop](./Game-Loop.html). Terminal graphics are employed to simplify development (no windowing libraries necessary).
+Graphics prints colored squares to the terminal as part of the [Game Loop](#Game-Loop). Terminal graphics are employed to simplify development (no windowing libraries necessary).
 
 # Patterns
 
 Five patterns from "Game Programming Patterns" were employed when writing the Automata program.
 
-- [State](./State.html)
-- [Double Buffer](./Double-Buffer.html)
-- [Game Loop](./Game-Loop.html)
-- [Data Locality](./Data-Locality.html)
-- [Update Method](./Update-Method.html)
+- [State](#State)
+- [Double Buffer](#Double-Buffer)
+- [Game Loop](#Game-Loop)
+- [Data Locality](#Data-Locality)
+- [Update Method](Update-Method)
 
 # State
 

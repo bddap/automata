@@ -96,7 +96,7 @@ Graphics prints colored squares to the terminal as part of the [Game Loop](#game
 Five patterns from "Game Programming Patterns" were employed when writing the Automata program.
 
 - [State](#state)
-- [Double Buffer](#double-Buffer)
+- [Double Buffer](#double-buffer)
 - [Game Loop](#game-loop)
 - [Data Locality](#data-locality)
 - [Update Method](#update-method)

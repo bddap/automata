@@ -40,11 +40,13 @@ impl Automata {
             Redstone(_) => maybe,
             RedstoneBlock() => maybe,
             Air() => maybe,
-            Water(wet) => if wet >= wetness {
-                None
-            } else {
-                Some(Water(wetness_here.max(1) - 1))
-            },
+            Water(wet) => {
+                if wet >= wetness {
+                    None
+                } else {
+                    Some(Water(wetness_here.max(1) - 1))
+                }
+            }
             _ => None,
         }
     }
@@ -53,11 +55,13 @@ impl Automata {
         // return what self becomes when it is powered
         // None if power has no effect
         match *self {
-            Redstone(spow) => if spow >= pow {
-                None
-            } else {
-                Some(Redstone(pow.max(1) - 1))
-            },
+            Redstone(spow) => {
+                if spow >= pow {
+                    None
+                } else {
+                    Some(Redstone(pow.max(1) - 1))
+                }
+            }
             GameOfLife(false) => Some(GameOfLife(true)),
             _ => None,
         }
@@ -67,11 +71,13 @@ impl Automata {
         match *self {
             Water(0) => None,
             Water(wetness) => other.wet(wetness),
-            Slug(slug_direction) => if slug_direction == direction {
-                Some(Slug(slug_direction))
-            } else {
-                None
-            },
+            Slug(slug_direction) => {
+                if slug_direction == direction {
+                    Some(Slug(slug_direction))
+                } else {
+                    None
+                }
+            }
             Redstone(0) => None,
             Redstone(powa) => other.powered(powa),
             RedstoneBlock() => other.powered(16),
@@ -85,16 +91,20 @@ impl Automata {
             (Slug(direction), _) => Slug(direction),
             (_, Slug(direction)) => Slug(direction),
             (Water(weta), Water(wetb)) => Water(weta.max(wetb)),
-            (Water(wet), a) => if a.is_succeptible_to_liquid() {
-                Water(wet)
-            } else {
-                a
-            },
-            (a, Water(wet)) => if a.is_succeptible_to_liquid() {
-                Water(wet)
-            } else {
-                a
-            },
+            (Water(wet), a) => {
+                if a.is_succeptible_to_liquid() {
+                    Water(wet)
+                } else {
+                    a
+                }
+            }
+            (a, Water(wet)) => {
+                if a.is_succeptible_to_liquid() {
+                    Water(wet)
+                } else {
+                    a
+                }
+            }
             (Redstone(powa), Redstone(powb)) => Redstone(powa.max(powb)),
             a => {
                 println!("{:?}", a);
@@ -126,11 +136,12 @@ impl Surroundings {
             self.left.inflict(middle, Right),
             self.right.inflict(middle, Left),
             self.bottommiddle.inflict(middle, Up),
-        ].iter()
-            .fold(None, |a, &b| match (a, b) {
-                (Some(l), Some(r)) => Some(l.resolve_infliction(r)),
-                _ => a.or(b),
-            })
+        ]
+        .iter()
+        .fold(None, |a, &b| match (a, b) {
+            (Some(l), Some(r)) => Some(l.resolve_infliction(r)),
+            _ => a.or(b),
+        })
     }
 }
 

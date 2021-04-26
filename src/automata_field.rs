@@ -1,4 +1,4 @@
-use automata::{next_middle, Automata, Surroundings, Direction};
+use automata::{next_middle, Automata, Direction, Surroundings};
 use std::mem;
 use std::slice::Chunks;
 use std::vec::Vec;
@@ -30,7 +30,7 @@ impl AutomataField {
         for x in 0..self.width / 8 {
             self.place(RedstoneBlock(), x * 8, h);
         }
- 
+
         let h = self.height / 16 * 7;
         let w = self.width / 2;
         self.place(Water(15), w, h);

@@ -56,13 +56,15 @@ fn color_of(automata: Automata) -> Colour {
     use self::Automata::*;
     use self::Colour::*;
     match automata {
-        Redstone(power) => if power == 0 {
-            BrightBlack
-        } else if power < 9 {
-            Red
-        } else {
-            BrightRed
-        },
+        Redstone(power) => {
+            if power == 0 {
+                BrightBlack
+            } else if power < 9 {
+                Red
+            } else {
+                BrightRed
+            }
+        }
         RedstoneBlock() => BrightWhite,
         GameOfLife(false) => BrightGreen,
         GameOfLife(true) => Green,

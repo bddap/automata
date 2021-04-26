@@ -111,21 +111,21 @@ The book gives an example of how state machines can save a game from bugs--trans
 
 ```rust
 enum Input {
-	PressB,
-	PressDown,
-	ReleaseDown,
+    PressB,
+    PressDown,
+    ReleaseDown,
 }
 
 ...
 
 fn handleInput(&mut self, input: Input) {
-	match input {
-		PressB => self.jump(),
-		PressDown => if !self.isJumping {
-			self.setGraphics(Ducking)
-		},
-		ReleaseDown => self.setGraphics(Standing),
-	}
+    match input {
+        PressB => self.jump(),
+        PressDown => if !self.isJumping {
+            self.setGraphics(Ducking)
+        },
+        ReleaseDown => self.setGraphics(Standing),
+    }
 }
 ```
 
@@ -135,24 +135,24 @@ Here is an example of the state pattern in action:
 
 ```rust
 enum PlayerState {
-	Standing,
-	Jumping,
-	Ducking,
-	Diving
+    Standing,
+    Jumping,
+    Ducking,
+    Diving
 }
 
 ...
 
 pub fn handleInput(&mut self, input: Input) {
-	self.state = match (self.state, input) {
-		(Standing, PressB) => (
-			self.velocity.y = 1.0;
-			Jumping
-		),
-		(Standing, PressDown) => Ducking,
-		(Ducking, ReleaseDown) => Standing,
-		(s, _) => s,
-	}
+    self.state = match (self.state, input) {
+        (Standing, PressB) => (
+            self.velocity.y = 1.0;
+            Jumping
+        ),
+        (Standing, PressDown) => Ducking,
+        (Ducking, ReleaseDown) => Standing,
+        (s, _) => s,
+    }
 }
 ```
 
@@ -167,7 +167,7 @@ pub fn next_middle(surroundings: Surroundings) -> Automata {
     }
 
     match surroundings.middle {
-		Water(0) => Air(),                           // No water => Air
+        Water(0) => Air(),                           // No water => Air
         Water(wetness) => Water(wetness.max(1) - 1), // Water drains over time
         Redstone(pow) => Redstone(pow.max(1) - 1),   // Unpowered redstone goes dark
         Slug(_) => Slime(),                          // Slugs leave a trail of slime
@@ -188,15 +188,15 @@ We want this slug to crawl over every Automata in it's path. In other words, eve
 
 ```rust
 fn inflict(&self, other: Self, direction: Direction) -> Option<Self> {
-	match self {
-		...
-		Slug(slug_direction) => if slug_direction == direction {
-			Some(Slug(slug_direction))
-		} else {
-			None
-		},
-		...
-	}
+    match self {
+        ...
+        Slug(slug_direction) => if slug_direction == direction {
+            Some(Slug(slug_direction))
+        } else {
+            None
+        },
+        ...
+    }
 }
 ```
 
@@ -204,10 +204,10 @@ When neighboring Automata request an infliction, one of the inflictions is chose
 
 ```
 fn resolve_infliction(&self, other: Self) -> Self {
-	match (*self, other) {
-		(Slug(_), Slug(_)) => Slime(),
-		...
-	}
+    match (*self, other) {
+        (Slug(_), Slug(_)) => Slime(),
+        ...
+    }
 }
 ```
 
@@ -248,13 +248,13 @@ Automata Field has an update method which is called each frame. It's called `tic
 
 ```rust
 pub fn tick(&mut self) {
-	for x in 0..self.width {
-		for y in 0..self.height {
-			self.field_alternate[y as usize * self.width as usize + x as usize] = 
-				next_middle(self.surroundings_for(x, y))
-	    }
-	}
-	mem::swap(&mut self.field, &mut self.field_alternate);
+    for x in 0..self.width {
+        for y in 0..self.height {
+            self.field_alternate[y as usize * self.width as usize + x as usize] = 
+                next_middle(self.surroundings_for(x, y))
+        }
+    }
+    mem::swap(&mut self.field, &mut self.field_alternate);
 }
 ```
 

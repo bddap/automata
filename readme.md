@@ -15,7 +15,7 @@ Automata differs from Conway's Game of Life. While cells in Conway's Game of Lif
 
 Automata program in action:
 
-[https://asciinema.org/a/xlJ1V1STsW7k3VMDQwX0zj10C](https://asciinema.org/a/xlJ1V1STsW7k3VMDQwX0zj10C)
+[https://asciinema.org/a/410093](https://asciinema.org/a/410093)
 
 Legend:
 
